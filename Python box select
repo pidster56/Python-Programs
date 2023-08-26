@@ -1,0 +1,57 @@
+import pygame
+import sys
+
+# Initialize Pygame
+pygame.init()
+
+# Constants
+WIDTH, HEIGHT = 800, 600
+SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
+CLOCK = pygame.time.Clock()
+FONT = pygame.font.SysFont("Arial", 16)
+
+# Colors
+WHITE = (255, 255, 255)
+BLUE = (0, 0, 255)
+BLACK = (0, 0, 0)
+
+def main():
+    drawing = False
+    start_x, start_y = 0, 0
+    end_x, end_y = 0, 0
+    
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            # Mouse button down event
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                drawing = True
+                start_x, start_y = event.pos
+
+            # Mouse button up event
+            if event.type == pygame.MOUSEBUTTONUP:
+                drawing = False
+                end_x, end_y = event.pos
+
+        # Mouse move event
+        if drawing:
+            end_x, end_y = pygame.mouse.get_pos()
+
+        # Drawing
+        SCREEN.fill(WHITE)
+        if drawing or (end_x and end_y):
+            pygame.draw.rect(SCREEN, BLUE, (start_x, start_y, end_x - start_x, end_y - start_y), 2)
+
+        # Display coordinates
+        coords_text = f"Start: ({start_x}, {start_y}) End: ({end_x}, {end_y})"
+        text_surface = FONT.render(coords_text, True, BLACK)
+        SCREEN.blit(text_surface, (10, 10))
+
+        pygame.display.update()
+        CLOCK.tick(60)
+
+if __name__ == "__main__":
+    main()
